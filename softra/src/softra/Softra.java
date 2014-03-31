@@ -16,12 +16,8 @@ public class Softra {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
-        int ans = 0;
-        for(int i=0;i<5;i++)
-        {
-            ans+=2;
-        }
+        // TODO code application logic herez
+        System.out.println("Arku Bhai !!");
     }
     
 }
