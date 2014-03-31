@@ -17,6 +17,11 @@ public class Softra {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        int ans = 0;
+        for(int i=0;i<5;i++)
+        {
+            ans+=2;
+        }
     }
     
 }
