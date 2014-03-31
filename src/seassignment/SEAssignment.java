@@ -17,6 +17,8 @@ public class SEAssignment {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        int r = 2;
+        r++;
     }
     
 }
