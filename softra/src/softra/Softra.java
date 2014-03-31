@@ -18,6 +18,9 @@ public class Softra {
     public static void main(String[] args) {
         // TODO code application logic herez
         System.out.println("Sanu Bhai !!");
+        int i = 2;
+        System.out.println("Haan");
+        
     }
     
 }
