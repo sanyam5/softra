@@ -10,6 +10,13 @@ package softra;
  *
  * @author hawck
  */
+
 public class bakchodi {
-    
+    public static int sanyammethod()
+    {
+        return 999;
+    }
+    public static void main(String[] args) {
+        System.out.println(sanyammethod());
+    }
 }
