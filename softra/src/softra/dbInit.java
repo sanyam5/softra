@@ -8,7 +8,9 @@ package softra;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
@@ -17,8 +19,9 @@ import java.sql.Statement;
  */
 public class dbInit {
 
+    static Connection conn = null;
+
     public static void startDb() {
-        Connection conn = null;
 
         try
         {
@@ -34,8 +37,7 @@ public class dbInit {
             {
                 s.execute("create table users(username varchar(40), score int)");
                 System.out.println("Created table users");
-            }
-            else 
+            } else
             {
                 System.out.println("Table Exists");
             }
@@ -46,8 +48,28 @@ public class dbInit {
         }
 
     }
-    public static void main(String[] args) {
+
+    public static void printEntries() throws SQLException {
+        PreparedStatement pst = conn.prepareStatement("SELECT * FROM users");
+        ResultSet rs = pst.executeQuery();
+        int rollcall = 0;
+        while (rs.next())
+        {
+            System.out.println(rs.getString(1) + " , " + rs.getInt(2));
+        }
+    }
+
+    public static void addEntry(String s, int t) throws SQLException {
+        PreparedStatement psInsert = conn.prepareStatement("insert into users values (?, ?)");
+        psInsert.setString(1, s);
+        psInsert.setInt(2, t);
+        psInsert.executeUpdate();
+    }
+
+    public static void main(String[] args) throws SQLException {
         startDb();
+//        addEntry("hua",1);
+        printEntries();
     }
 
 }
