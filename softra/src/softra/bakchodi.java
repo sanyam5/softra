@@ -11,5 +11,11 @@ package softra;
  * @author hawck
  */
 public class bakchodi {
-    
+    public static void main(String[] args) {
+        System.out.println("voila");
+    }
+    public void huia()
+    {
+        System.out.println("lelee");
+    }
 }
