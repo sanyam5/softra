@@ -18,11 +18,17 @@ public class bakchodi {
     }
     public static void main(String[] args) {
         System.out.println(sanyammethod());
+        int k = 2;
     }
 
     public void huia()
     {
         System.out.println("lelee");
 
+    }
+    
+    public void liyare()
+    {
+        int i= 2;
     }
 }
