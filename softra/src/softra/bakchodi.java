@@ -18,6 +18,7 @@ public class bakchodi {
     }
     public static void main(String[] args) {
         System.out.println(sanyammethod());
+        System.out.println("roya re");
     }
 
     public void huia()
