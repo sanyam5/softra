@@ -19,4 +19,10 @@ public class bakchodi {
     public static void main(String[] args) {
         System.out.println(sanyammethod());
     }
+
+    public void huia()
+    {
+        System.out.println("lelee");
+
+    }
 }
