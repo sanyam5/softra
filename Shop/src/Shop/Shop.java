@@ -6,15 +6,38 @@
 
 package Shop;
 
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.ParseException;
+import java.util.*;
 
 /**
  *
  * @author arkanathpathak
  */
 public class Shop {
-
+    private ShopOwner owner;
+    private ArrayList<Medicine> allMedicines;
+    private ArrayList<Vendor> allVendors;
+    
+    public void Login(String password)
+    {
+        
+    }
+    
+    public boolean Register(String password)
+    {
+        return true;
+    }
+    
+    public boolean addMedicine(Medicine inp)
+    {
+        return true;
+    }
+    
+    public void showProfit(Timestamp date1, Timestamp date2)
+    {
+        
+    }
     /**
      * @param args the command line arguments
      */
