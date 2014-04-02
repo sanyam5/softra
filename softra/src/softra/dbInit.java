@@ -5,13 +5,7 @@
  */
 package softra;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  *
@@ -32,14 +26,50 @@ public class dbInit {
             conn = DriverManager.getConnection(url + dbName + ";create=true");
             Statement s = conn.createStatement();
             DatabaseMetaData dbmd = conn.getMetaData();
-            ResultSet rs1 = dbmd.getTables(null, "APP", "USERS", null);
+            ResultSet rs1 = dbmd.getTables(null, "APP", "SHOPOWNER", null);
             if (!rs1.next())
             {
-                s.execute("create table users(username varchar(40), score int)");
-                System.out.println("Created table users");
+                s.execute("create table shopowner(name varchar(200), password varchar(100), address varchar(200), phoneno bigint, email varchar(100), regDate timestamp)");
+                System.out.println("Created table shopowner");
             } else
             {
-                System.out.println("Table Exists");
+                System.out.println("Table shopowner Exists");
+            }
+            rs1 = dbmd.getTables(null, "APP", "MEDICINES", null);
+            if (!rs1.next())
+            {
+                s.execute("create table medicines(codenumber varchar(100), tradename varchar(100), unitprice bigint, purchaseprice bigint)");
+                System.out.println("Created table medicines");
+            } else
+            {
+                System.out.println("Table medicines Exists");
+            }
+            rs1 = dbmd.getTables(null, "APP", "VENDORS", null);
+            if (!rs1.next())
+            {
+                s.execute("create table vendors(id bigint, address varchar(200), name varchar(200))");
+                System.out.println("Created table vendors");
+            } else
+            {
+                System.out.println("Table vendors Exists");
+            }
+            rs1 = dbmd.getTables(null, "APP", "MEDVENDORS", null);
+            if (!rs1.next())
+            {
+                s.execute("create table medvendors(codenumber varchar(100),vendorid bigint)");
+                System.out.println("Created table medvendors");
+            } else
+            {
+                System.out.println("Table medvendors Exists");
+            }
+            rs1 = dbmd.getTables(null, "APP", "MEDSTOCKS", null);
+            if (!rs1.next())
+            {
+                s.execute("create table medstocks(codenumber varchar(100),vendorid bigint, batchno varchar(100), expDate timestamp, quantity bigint)");
+                System.out.println("Created table medstocks");
+            } else
+            {
+                System.out.println("Table medstocks Exists");
             }
 
         } catch (Exception e)
@@ -49,27 +79,17 @@ public class dbInit {
 
     }
 
-    public static void printEntries() throws SQLException {
-        PreparedStatement pst = conn.prepareStatement("SELECT * FROM users");
-        ResultSet rs = pst.executeQuery();
-        int rollcall = 0;
-        while (rs.next())
-        {
-            System.out.println(rs.getString(1) + " , " + rs.getInt(2));
-        }
-    }
-
-    public static void addEntry(String s, int t) throws SQLException {
-        PreparedStatement psInsert = conn.prepareStatement("insert into users values (?, ?)");
-        psInsert.setString(1, s);
-        psInsert.setInt(2, t);
-        psInsert.executeUpdate();
-    }
+//    public static void addEntry(String s, int t) throws SQLException {
+//        PreparedStatement psInsert = conn.prepareStatement("insert into users values (?, ?)");
+//        psInsert.setString(1, s);
+//        psInsert.setInt(2, t);
+//        psInsert.executeUpdate();
+//    }
 
     public static void main(String[] args) throws SQLException {
         startDb();
 //        addEntry("hua",1);
-        printEntries();
+//        printEntries();
     }
 
 }
