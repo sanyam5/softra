@@ -6,6 +6,7 @@
 
 package Shop;
 
+import java.sql.*;
 import java.util.ArrayList;
 
 /**
@@ -18,26 +19,20 @@ public class Vendor {
     private ArrayList<String> medicinelist;
     private String name;
     
-    public void reloadFromDB()
-    {
-        
-    }
-    public void updateToDB()
-    {
-        
-    }
     public Vendor(long id)
     {
         //sql code populates this class with id
         this.id = id;
-        reloadFromDB();
         
     }
-    public void addNewMedicine(Medicine medicineToAdd)
+    public void addNewMedicine(Medicine medicineToAdd) throws SQLException
     {
-        medicinelist.add(medicineToAdd.codenumber);
+        medicinelist.add(medicineToAdd.getCodenumber());
         //sql code adds
-        updateToDB();
+        PreparedStatement psInsert = dbInit.conn.prepareStatement("insert into medvendors values (?, ?)");
+        psInsert.setString(1, medicineToAdd.getCodenumber());
+        psInsert.setLong(2, id);
+        psInsert.executeUpdate();
     }
 
     public void setId(long id) {
