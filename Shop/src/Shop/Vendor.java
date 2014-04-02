@@ -6,6 +6,8 @@
 
 package Shop;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 /**
@@ -18,26 +20,29 @@ public class Vendor {
     private ArrayList<String> medicinelist;
     private String name;
     
-    public void reloadFromDB()
+     public Vendor(long id)
     {
         
-    }
-    public void updateToDB()
-    {
-        
-    }
-    public Vendor(long id)
-    {
-        //sql code populates this class with id
         this.id = id;
-        reloadFromDB();
+        //sql code populates this class with id
+        if (dbInit.conn == null)
+        {
+            dbInit.startDb();
+        }
+        PreparedStatement pst = dbInit.conn.prepareStatement("SELECT * FROM vendors WHERE id = '"+id+"'");
+        ResultSet rs = pst.executeQuery();
+        while(rs.next())
+        {
+            this.address = rs.getString(1);        
+            this.medicinelist.add(rs.getString(2));
+            this.name = rs.getString(3);  
+        }
         
     }
     public void addNewMedicine(Medicine medicineToAdd)
     {
         medicinelist.add(medicineToAdd.codenumber);
         //sql code adds
-        updateToDB();
     }
 
     public void setId(long id) {
