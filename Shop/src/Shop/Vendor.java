@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Shop;
 
 import java.sql.*;
@@ -18,13 +17,27 @@ public class Vendor {
     private String address;
     private ArrayList<String> medicinelist;
     private String name;
-    
-    public Vendor(long id)
-    {
-        //sql code populates this class with id
+
+    //sql code populates this class with id
+    public Vendor(long id) throws SQLException {
+
         this.id = id;
-        
+        //sql code populates this class with id
+        if (dbInit.conn == null)
+        {
+            dbInit.startDb();
+        }
+        PreparedStatement pst = dbInit.conn.prepareStatement("SELECT * FROM vendors WHERE id = '" + id + "'");
+        ResultSet rs = pst.executeQuery();
+        while (rs.next())
+        {
+            this.address = rs.getString(1);
+            this.medicinelist.add(rs.getString(2));
+            this.name = rs.getString(3);
+        }
+
     }
+
     public void addNewMedicine(Medicine medicineToAdd) throws SQLException
     {
         medicinelist.add(medicineToAdd.getCodenumber());
@@ -34,6 +47,7 @@ public class Vendor {
         psInsert.setLong(2, id);
         psInsert.executeUpdate();
     }
+
 
     public void setId(long id) {
         this.id = id;
