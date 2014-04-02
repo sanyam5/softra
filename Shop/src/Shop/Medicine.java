@@ -17,7 +17,10 @@ public class Medicine {
     private String tradename;
     private ArrayList<Vendor> supplyvendors;
     private ArrayList<MedicineBatch> batches;
-    
+    private long unitsellingprice;
+    private long purchasingprice;
+    private long totalsold;
+    private long totalstock;
     
     public void sell(long quantity)
     {
@@ -69,10 +72,6 @@ public class Medicine {
     public long getTotalstock() {
         return totalstock;
     }
-    private long unitsellingprice;
-    private long purchasingprice;
-    private long totalsold;
-    private long totalstock;
 
     public String getCodenumber() {
         return codenumber;
