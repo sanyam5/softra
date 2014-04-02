@@ -27,13 +27,20 @@ public class Vendor {
         {
             dbInit.startDb();
         }
-        PreparedStatement pst = dbInit.conn.prepareStatement("SELECT * FROM vendors WHERE id = '" + id + "'");
+        PreparedStatement pst = dbInit.conn.prepareStatement("SELECT * FROM vendors WHERE id = " + id);
         ResultSet rs = pst.executeQuery();
         while (rs.next())
         {
-            this.address = rs.getString(1);
-            this.medicinelist.add(rs.getString(2));
+            this.address = rs.getString(2);
             this.name = rs.getString(3);
+            medicinelist = new ArrayList<String>();
+            PreparedStatement pst2 = dbInit.conn.prepareStatement("SELECT * FROM medvendors WHERE vendorid = " + id + "");
+            ResultSet rs2 = pst.executeQuery();
+            while (rs2.next())
+            {
+                String codenumber = rs2.getString(1);
+                if(!medicinelist.contains(codenumber)) medicinelist.add(codenumber);
+            }
         }
 
     }
