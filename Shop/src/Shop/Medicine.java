@@ -33,8 +33,23 @@ public class Medicine {
     public Medicine(String tradename,
             ArrayList<Vendor> supplyvendors,
             long unitsellingprice,
-            long purchasingprice
-    ) {
+            long purchasingprice) throws SQLException
+    {
+        if (dbInit.conn == null)
+        {
+            dbInit.startDb();
+        }
+        PreparedStatement pst = dbInit.conn.prepareStatement("SELECT * FROM medicines");
+        ResultSet rs = pst.executeQuery();
+        int counter = 0;
+        while (rs.next())
+        {
+            counter++;
+            batches.add(new MedicineBatch(rs.getString(3)));
+            totalstock += rs.getLong(5);
+        }
+        counter++;
+        this.codenumber = "MED"+counter;
         this.tradename = tradename;
         this.supplyvendors = supplyvendors;
         this.unitsellingprice = unitsellingprice;
