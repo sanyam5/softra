@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Shop;
 
 import java.sql.*;
@@ -15,37 +14,61 @@ import java.util.*;
  * @author arkanathpathak
  */
 public class Shop {
+
     private ShopOwner owner;
     private ArrayList<Medicine> allMedicines;
     private ArrayList<Vendor> allVendors;
-    
-    public void Login(String password)
-    {
-        
+
+    public void Login(String password) {
+        if (owner.getPassword().equals(password))
+        {
+            //continue logging in
+        } else
+        {
+            //show dialog
+        }
     }
-    
-    public boolean Register(String password)
-    {
-        return true;
+
+    public boolean Register(ShopOwner inp) {
+        if (inp.getName() != null)
+        {
+            owner = inp;
+            return true;
+        } else
+        {
+            return true;
+        }
     }
-    
-    public boolean addMedicine(Medicine inp)
-    {
-        return true;
+
+    public boolean addMedicine(Medicine inp) {
+        try
+        {
+            PreparedStatement psInsert = dbInit.conn.prepareStatement("insert into medicines values (?, ?, ?, ?)");
+            psInsert.setString(1, inp.getCodenumber());
+            psInsert.setString(2, inp.getTradename());
+            psInsert.setLong(3, inp.getUnitsellingprice());
+            psInsert.setLong(4, inp.getPurchasingprice());
+            psInsert.executeUpdate();
+            return true;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
     }
-    
-    public void showProfit(Timestamp date1, Timestamp date2)
-    {
-        
+
+    public void showProfit(Timestamp date1, Timestamp date2) {
+
     }
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws SQLException, ParseException {
-        // TODO code application logic herez
-//        new ShopOwner("Arka","pass","B-121, LLR", "9818", "arkanath@x.xom", ShopOwner.ddmmYYYY2Timestamp(2, 12, 2011));
+
         ShopOwner a = new ShopOwner();
         System.out.println(a.getPhoneno());
     }
-    
+
 }

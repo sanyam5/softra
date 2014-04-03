@@ -44,7 +44,8 @@ public class ShopOwner {
         regDate = rs.getTimestamp(6);
     }
 
-    public ShopOwner(String name, String password, String address, String phoneno, String emailid, Timestamp regDate) throws SQLException {
+    public ShopOwner(String name, String password, String address, String phoneno, String emailid, Timestamp regDate){
+        try{
         if (dbInit.conn == null)
         {
             dbInit.startDb();
@@ -66,6 +67,12 @@ public class ShopOwner {
         psInsert.setString(5, emailid);
         psInsert.setTimestamp(6, regDate);
         psInsert.executeUpdate();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            this.name= null;    
+        }
 
     }
 
