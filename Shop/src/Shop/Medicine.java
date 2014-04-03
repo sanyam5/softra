@@ -40,6 +40,7 @@ public class Medicine {
         this.supplyvendors = supplyvendors;
         this.unitsellingprice = unitsellingprice;
         this.purchasingprice = purchasingprice;        
+        this.addDate = new Timestamp(new Date().getTime());
     }
     
     public Medicine(String codenumber) throws SQLException {
@@ -71,6 +72,7 @@ public class Medicine {
             tradename = rs.getString(2);
             unitsellingprice = rs.getLong(3);
             purchasingprice = rs.getLong(4);
+            addDate = rs.getTimestamp(5);
         }
         pst = dbInit.conn.prepareStatement("SELECT * FROM medsales WHERE codenumber = '"+this.codenumber+"'");
         rs = pst.executeQuery();
