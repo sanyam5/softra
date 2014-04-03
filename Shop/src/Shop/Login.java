@@ -278,7 +278,10 @@ public class Login extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
-        if ((new String(passwordlabel1.getPassword())).equals(new String(passwordlabel2.getPassword())))
+        if (!(new String(passwordlabel1.getPassword())).equals(new String(passwordlabel2.getPassword())))
+        {
+            JOptionPane.showMessageDialog(null, "Passwords Don't Match!!");
+        } else
         {
             if(Shop.Register(new ShopOwner(namelabel.getText(), new String(passwordlabel1.getPassword()), addressbox.getText(), phonelabel.getText(), emaillabel.getText(), new Timestamp(new java.util.Date().getTime()))))
             {Register.setVisible(false);
@@ -291,10 +294,7 @@ public class Login extends javax.swing.JFrame {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
             }
-            else 
-            {
-                JOptionPane.showMessageDialog(null, "Phone No. must be numeric");  
-            }
+            
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
