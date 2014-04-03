@@ -71,8 +71,10 @@ public class Medicine {
         ResultSet rs = pst.executeQuery();
         while (rs.next())
         {
-            batches.add(new MedicineBatch(rs.getString(3)));
-            totalstock += rs.getLong(5);
+            MedicineBatch medicineBatch = new MedicineBatch(rs.getString(3));
+            batches.add(medicineBatch);
+            if(rs.getTimestamp(4).getTime() > (new Date().getTime()))
+                totalstock += rs.getLong(5);
         }
 
         pst = dbInit.conn.prepareStatement("SELECT * FROM medvendors WHERE codenumber = '" + this.codenumber + "'");
@@ -99,6 +101,7 @@ public class Medicine {
     }
 
     public void sell(long quantity, long sellDate) throws Exception {
+        
         if (totalstock >= quantity)
         {
             totalstock -= quantity;
@@ -108,11 +111,13 @@ public class Medicine {
             while (tosell > 0)
             {
                 MedicineBatch mb = it.next();
+                if(mb.getExpiryDate().getTime() <= (new Date()).getTime()) continue; //medicine already expired
                 if (mb.getQuantity() < tosell)
                 {
                     tosell -= mb.getQuantity();
                     mb.setQuantity(0);
-                } else
+                } 
+                else
                 {
                     mb.setQuantity(mb.getQuantity() - tosell);
                     tosell = 0;
