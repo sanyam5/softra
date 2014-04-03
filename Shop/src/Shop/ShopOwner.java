@@ -7,6 +7,8 @@ package Shop;
 
 import java.sql.*;
 import java.text.*;
+import java.util.regex.Pattern;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -45,6 +47,8 @@ public class ShopOwner {
     }
 
     public ShopOwner(String name, String password, String address, String phoneno, String emailid, Timestamp regDate){
+        final Pattern rfc2822 = Pattern.compile ("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?");
+        String regex = "[0-9]+";
         try{
         if (dbInit.conn == null)
         {
@@ -63,14 +67,24 @@ public class ShopOwner {
         psInsert.setString(1, name);
         psInsert.setString(2, password);
         psInsert.setString(3, address);
+        
+        
+        if(!phoneno.matches(regex))
+        {
+            throw new Exception("Invalid Phone No., Try Again!");
+        }
         psInsert.setLong(4, Long.parseLong(phoneno));
         psInsert.setString(5, emailid);
+        if(!(rfc2822.matcher(emailid).matches())) 
+        {
+            throw new Exception("Invalid E-mail, Try Again!");
+        }
         psInsert.setTimestamp(6, regDate);
         psInsert.executeUpdate();
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            this.address = e.getMessage();
             this.name= null;    
         }
 

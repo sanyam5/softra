@@ -8,6 +8,7 @@ package Shop;
 import java.sql.*;
 import java.text.ParseException;
 import java.util.*;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -15,16 +16,19 @@ import java.util.*;
  */
 public class Shop {
 
-    private static ShopOwner owner;
+    public static ShopOwner owner;
     public static ArrayList<Medicine> allMedicines;
     public static ArrayList<Vendor> allVendors;
 
-    public static void Login(String password) {
+    public static void Login(String password, Login in) {
         if (owner.getPassword().equals(password))
         {
+            new LoggedIn().setVisible(true);
+            in.setVisible(false);
             //continue logging in
         } else
         {
+            JOptionPane.showMessageDialog(null, "Wrong Password");
             //show dialog
         }
     }
@@ -36,6 +40,7 @@ public class Shop {
             return true;
         } else
         {
+            JOptionPane.showMessageDialog(null, inp.getAddress());
             return false;
         }
     }
@@ -81,20 +86,22 @@ public class Shop {
      */
     public static void main(String[] args) throws SQLException, ParseException {
 
-        Shop.Register(new ShopOwner("Arkanath", "pass", "B-121", "981821", "x@y.com", new Timestamp(new java.util.Date().getTime())));
-        dbInit.startDb();
-        ShopOwner a = new ShopOwner();
-        System.out.println(a.getPhoneno());
-        long id = new Vendor("Hzaari Baag", "phekubabu").getId();
-        System.out.println(id);
-        ArrayList<Vendor> ch = new ArrayList<Vendor>();
-        ch.add(new Vendor(id));
-        //Shop.addMedicine(new Medicine("Paracetamol", ch, 50, 40));
-        dbInit.refreshMedicines();
-        dbInit.printMedicines();
-        allMedicines.get(0).addSupply(new MedicineBatch("MED1", id, "PRCT101", new Timestamp(new java.util.Date().getTime()+1000*60*60*24*7*4), 4));
-        dbInit.printMedBatches();
-        dbInit.printVendors();
+        dbInit.refreshAll();
+        new Login();
+//        Shop.Register(new ShopOwner("Arkanath", "pass", "B-121", "981821", "x@y.com", new Timestamp(new java.util.Date().getTime())));
+//        dbInit.startDb();
+//        ShopOwner a = new ShopOwner();
+//        System.out.println(a.getPhoneno());
+//        long id = new Vendor("Hzaari Baag", "phekubabu").getId();
+//        System.out.println(id);
+//        ArrayList<Vendor> ch = new ArrayList<Vendor>();
+//        ch.add(new Vendor(id));
+//        //Shop.addMedicine(new Medicine("Paracetamol", ch, 50, 40));
+//        dbInit.refreshMedicines();
+//        dbInit.printMedicines();
+//        allMedicines.get(0).addSupply(new MedicineBatch("MED1", id, "PRCT101", new Timestamp(new java.util.Date().getTime()+1000*60*60*24*7*4), 4));
+//        dbInit.printMedBatches();
+//        dbInit.printVendors();
     }
 
 }
