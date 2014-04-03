@@ -39,7 +39,7 @@ public class Medicine {
         {
             dbInit.startDb();
         }
-        PreparedStatement pst = dbInit.conn.prepareStatement("SELECT * FROM medicines");
+        PreparedStatement pst = dbInit.conn.prepareStatement("SELECT * FROM medstocks WHERE codenumber = '" + this.codenumber + "' ORDER BY expDate");
         ResultSet rs = pst.executeQuery();
         int counter = 0;
         while (rs.next())
@@ -61,6 +61,8 @@ public class Medicine {
         this.codenumber = codenumber;
         this.totalstock = 0;
         this.totalstock = 0;
+        this.supplyvendors = new ArrayList<Vendor>();
+        this.batches = new ArrayList<MedicineBatch>();
         if (dbInit.conn == null)
         {
             dbInit.startDb();

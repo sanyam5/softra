@@ -15,11 +15,11 @@ import java.util.*;
  */
 public class Shop {
 
-    private ShopOwner owner;
-    private ArrayList<Medicine> allMedicines;
-    private ArrayList<Vendor> allVendors;
+    private static ShopOwner owner;
+    public static ArrayList<Medicine> allMedicines;
+    public static ArrayList<Vendor> allVendors;
 
-    public void Login(String password) {
+    public static void Login(String password) {
         if (owner.getPassword().equals(password))
         {
             //continue logging in
@@ -29,7 +29,7 @@ public class Shop {
         }
     }
 
-    public boolean Register(ShopOwner inp) {
+    public static boolean Register(ShopOwner inp) {
         if (inp.getName() != null)
         {
             owner = inp;
@@ -81,10 +81,17 @@ public class Shop {
      */
     public static void main(String[] args) throws SQLException, ParseException {
 
+        Shop.Register(new ShopOwner("Arkanath", "pass", "B-121", "981821", "x@y.com", new Timestamp(new java.util.Date().getTime())));
         dbInit.startDb();
         ShopOwner a = new ShopOwner();
         System.out.println(a.getPhoneno());
-      
+        long id = new Vendor("Hzaari Baag", "phekubabu").getId();
+        System.out.println(id);
+        ArrayList<Vendor> ch = new ArrayList<Vendor>();
+        ch.add(new Vendor(id));
+        Shop.addMedicine(new Medicine("Paracetamol", ch, 50, 40));
+        dbInit.refreshMedicines();
+        dbInit.printMedicines();
     }
 
 }

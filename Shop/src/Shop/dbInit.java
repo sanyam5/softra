@@ -6,6 +6,9 @@
 package Shop;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 /**
  *
@@ -87,7 +90,27 @@ public class dbInit {
         }
 
     }
-
+    public static void refreshMedicines() throws SQLException
+    {
+        ArrayList<Medicine> all = new ArrayList<Medicine>();
+        PreparedStatement ps = dbInit.conn.prepareStatement("SELECT * from medicines");
+        ResultSet rs = ps.executeQuery();
+        while(rs.next())
+        {
+            all.add(new Medicine(rs.getString(1)));
+        }
+        Shop.allMedicines = all;
+    }
+    public static void printMedicines() throws SQLException
+    {
+        PreparedStatement psInsert = conn.prepareStatement("SELECT * from medicines");
+        ResultSet rs = psInsert.executeQuery();
+        while(rs.next())
+        {
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            System.out.println(rs.getString(1)+"|"+rs.getString(2)+"|"+rs.getLong(3)+"|"+rs.getLong(4)+"|"+dateFormat.format(rs.getTimestamp(5)));
+        }
+    }
 //    public static void addEntry(String s, int t) throws SQLException {
 //        PreparedStatement psInsert = conn.prepareStatement("insert into users values (?, ?)");
 //        psInsert.setString(1, s);
