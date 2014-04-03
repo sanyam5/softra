@@ -40,7 +40,7 @@ public class Shop {
         }
     }
 
-    public boolean addMedicine(Medicine inp) {
+    public static boolean addMedicine(Medicine inp) {
         try
         {
             PreparedStatement ps = dbInit.conn.prepareStatement("SELECT * from medicines WHERE codenumber = '"+inp.getCodenumber()+"'");
@@ -81,8 +81,10 @@ public class Shop {
      */
     public static void main(String[] args) throws SQLException, ParseException {
 
+        dbInit.startDb();
         ShopOwner a = new ShopOwner();
         System.out.println(a.getPhoneno());
+      
     }
 
 }
