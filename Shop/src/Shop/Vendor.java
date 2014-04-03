@@ -23,9 +23,18 @@ public class Vendor {
     {
         this.address = address;
         this.name = name;
-        PreparedStatement psInsert = dbInit.conn.prepareStatement("insert into vendors values (?, ?)");
-        psInsert.setString(1,address);
-        psInsert.setString(2,name);
+        PreparedStatement ps = dbInit.conn.prepareStatement("SELECT * from vendors");
+        ResultSet rs = ps.executeQuery();
+        long count= 0;
+        while(rs.next())
+        {
+            count ++;
+        }
+        this.id = (long) (Math.random()*100*(1000000007))+count;
+        PreparedStatement psInsert = dbInit.conn.prepareStatement("insert into vendors values (?, ?, ?)");
+        psInsert.setLong(1,id);
+        psInsert.setString(2,address);
+        psInsert.setString(3,name);
         psInsert.executeUpdate();
     }
     
@@ -45,7 +54,7 @@ public class Vendor {
             this.name = rs.getString(3);
             medicinelist = new ArrayList<String>();
             PreparedStatement pst2 = dbInit.conn.prepareStatement("SELECT * FROM medvendors WHERE vendorid = " + id + "");
-            ResultSet rs2 = pst.executeQuery();
+            ResultSet rs2 = pst2.executeQuery();
             while (rs2.next())
             {
                 String codenumber = rs2.getString(1);
@@ -97,4 +106,6 @@ public class Vendor {
     public String getName() {
         return name;
     }
+    
+    
 }
