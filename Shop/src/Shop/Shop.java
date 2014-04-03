@@ -89,9 +89,12 @@ public class Shop {
         System.out.println(id);
         ArrayList<Vendor> ch = new ArrayList<Vendor>();
         ch.add(new Vendor(id));
-        Shop.addMedicine(new Medicine("Paracetamol", ch, 50, 40));
+        //Shop.addMedicine(new Medicine("Paracetamol", ch, 50, 40));
         dbInit.refreshMedicines();
         dbInit.printMedicines();
+        allMedicines.get(0).addSupply(new MedicineBatch("MED1", id, "PRCT101", new Timestamp(new java.util.Date().getTime()+1000*60*60*24*7*4), 4));
+        dbInit.printMedBatches();
+        dbInit.printVendors();
     }
 
 }

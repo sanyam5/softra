@@ -101,14 +101,59 @@ public class dbInit {
         }
         Shop.allMedicines = all;
     }
+    public static void refreshVendors() throws SQLException
+    {
+        ArrayList<Vendor> all = new ArrayList<Vendor>();
+        PreparedStatement ps = dbInit.conn.prepareStatement("SELECT * from vendors");
+        ResultSet rs = ps.executeQuery();
+        while(rs.next())
+        {
+            all.add(new Vendor(rs.getLong(1)));
+        }
+        Shop.allVendors = all;
+    }
     public static void printMedicines() throws SQLException
     {
+        System.out.println("Printing Medicines");
         PreparedStatement psInsert = conn.prepareStatement("SELECT * from medicines");
         ResultSet rs = psInsert.executeQuery();
         while(rs.next())
         {
             DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
             System.out.println(rs.getString(1)+"|"+rs.getString(2)+"|"+rs.getLong(3)+"|"+rs.getLong(4)+"|"+dateFormat.format(rs.getTimestamp(5)));
+        }
+    }
+    public static void printVendors() throws SQLException
+    {
+        System.out.println("Printing Vendors");
+        PreparedStatement psInsert = conn.prepareStatement("SELECT * from vendors");
+        ResultSet rs = psInsert.executeQuery();
+        while(rs.next())
+        {
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            System.out.println(rs.getLong(1)+"|"+rs.getString(2)+"|"+rs.getString(3));
+        }
+    }
+    public static void printMedVendors() throws SQLException
+    {
+        System.out.println("Printing MedVendors");
+        PreparedStatement psInsert = conn.prepareStatement("SELECT * from medvendors");
+        ResultSet rs = psInsert.executeQuery();
+        while(rs.next())
+        {
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            System.out.println(rs.getString(1)+"|"+rs.getLong(2));
+        }
+    }
+    public static void printMedBatches() throws SQLException
+    {
+        System.out.println("Printing medstocks");
+        PreparedStatement psInsert = conn.prepareStatement("SELECT * from medstocks");
+        ResultSet rs = psInsert.executeQuery();
+        while(rs.next())
+        {
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            System.out.println(rs.getString(1)+"|"+rs.getLong(2)+"|"+rs.getString(3)+"|"+dateFormat.format(rs.getTimestamp(4))+"|"+rs.getLong(5));
         }
     }
 //    public static void addEntry(String s, int t) throws SQLException {
