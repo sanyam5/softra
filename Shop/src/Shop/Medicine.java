@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package Shop;
 
 import java.sql.PreparedStatement;
@@ -20,6 +19,7 @@ import java.util.Iterator;
  * @author arkanathpathak
  */
 public class Medicine {
+
     private String codenumber;
     private String tradename;
     private ArrayList<Vendor> supplyvendors;
@@ -30,17 +30,16 @@ public class Medicine {
     private long totalstock;
 
     public Medicine(String tradename,
-            ArrayList<Vendor> supplyvendors, 
+            ArrayList<Vendor> supplyvendors,
             long unitsellingprice,
             long purchasingprice
-            ) 
-    {
+    ) {
         this.tradename = tradename;
         this.supplyvendors = supplyvendors;
         this.unitsellingprice = unitsellingprice;
-        this.purchasingprice = purchasingprice;        
+        this.purchasingprice = purchasingprice;
     }
-    
+
     public Medicine(String codenumber) throws SQLException {
         this.codenumber = codenumber;
         this.totalstock = 0;
@@ -49,60 +48,57 @@ public class Medicine {
         {
             dbInit.startDb();
         }
-        PreparedStatement pst = dbInit.conn.prepareStatement("SELECT * FROM medstocks WHERE codenumber = '"+this.codenumber+"' ORDER BY expDate");
+        PreparedStatement pst = dbInit.conn.prepareStatement("SELECT * FROM medstocks WHERE codenumber = '" + this.codenumber + "' ORDER BY expDate");
         ResultSet rs = pst.executeQuery();
-        while(rs.next())
-        {            
+        while (rs.next())
+        {
             batches.add(new MedicineBatch(rs.getString(3)));
             totalstock += rs.getLong(5);
         }
-        
-        pst = dbInit.conn.prepareStatement("SELECT * FROM medvendors WHERE codenumber = '"+this.codenumber+"'");
+
+        pst = dbInit.conn.prepareStatement("SELECT * FROM medvendors WHERE codenumber = '" + this.codenumber + "'");
         rs = pst.executeQuery();
-        while(rs.next())
-        {            
+        while (rs.next())
+        {
             supplyvendors.add(new Vendor(rs.getLong(2)));
         }
-        pst = dbInit.conn.prepareStatement("SELECT * FROM medicines WHERE codenumber = '"+this.codenumber+"'");
+        pst = dbInit.conn.prepareStatement("SELECT * FROM medicines WHERE codenumber = '" + this.codenumber + "'");
         rs = pst.executeQuery();
-        while(rs.next())
-        {            
+        while (rs.next())
+        {
             tradename = rs.getString(2);
             unitsellingprice = rs.getLong(3);
             purchasingprice = rs.getLong(4);
         }
-        pst = dbInit.conn.prepareStatement("SELECT * FROM medsales WHERE codenumber = '"+this.codenumber+"'");
+        pst = dbInit.conn.prepareStatement("SELECT * FROM medsales WHERE codenumber = '" + this.codenumber + "'");
         rs = pst.executeQuery();
-        while(rs.next())
-        {            
-            totalsold += rs.getLong(2);            
+        while (rs.next())
+        {
+            totalsold += rs.getLong(2);
         }
     }
-    
-    
-    public void sell(long quantity, long  sellDate) throws Exception
-    {
-        if(totalstock>=quantity) 
+
+    public void sell(long quantity, long sellDate) throws Exception {
+        if (totalstock >= quantity)
         {
             totalstock -= quantity;
             totalsold += quantity;
             long tosell = quantity;
             Iterator<MedicineBatch> it = batches.iterator();
-            while(tosell>0)
+            while (tosell > 0)
             {
                 MedicineBatch mb = it.next();
-                if(mb.getQuantity() < tosell)
+                if (mb.getQuantity() < tosell)
                 {
                     tosell -= mb.getQuantity();
                     mb.setQuantity(0);
-                }
-                else
+                } else
                 {
                     mb.setQuantity(mb.getQuantity() - tosell);
                     tosell = 0;
                 }
             }
-            
+
             if (dbInit.conn == null)
             {
                 dbInit.startDb();
@@ -112,31 +108,28 @@ public class Medicine {
             psInsert.setLong(2, quantity);
             psInsert.setTimestamp(3, new Timestamp(sellDate));
             psInsert.executeUpdate();
-        } 
-        else 
+        } else
         {
             throw new Exception("Bitch nothing to sell");
         }
-        
+
     }
-    
-    public ArrayList<MedicineBatch> getExpiredbatches()
-    {
+
+    public ArrayList<MedicineBatch> getExpiredbatches() {
         ArrayList<MedicineBatch> expired = new ArrayList<MedicineBatch>();
-        for(MedicineBatch mb : batches)
+        for (MedicineBatch mb : batches)
         {
-            if(mb.getExpiryDate().getTime()< (new Date()).getTime() ) //how to gewt timestamp??
+            if (mb.getExpiryDate().getTime() < (new Date()).getTime()) //how to gewt timestamp??
             {
                 expired.add(mb);
             }
         }
         return expired;
     }
-    
-    public void removeExpired() throws SQLException
-    {
+
+    public void removeExpired() throws SQLException {
         ArrayList<MedicineBatch> expired = getExpiredbatches();
-        for(MedicineBatch exmb : expired)
+        for (MedicineBatch exmb : expired)
         {
             batches.remove(exmb);
             if (dbInit.conn == null)
@@ -144,18 +137,24 @@ public class Medicine {
                 dbInit.startDb();
             }
             Statement stmt = dbInit.conn.createStatement();
-            String sqlupdate = "DELETE from medstocks WHERE batchno = '"+exmb.getBatchNo()+"'";
+            String sqlupdate = "DELETE from medstocks WHERE batchno = '" + exmb.getBatchNo() + "'";
             stmt.executeUpdate(sqlupdate);
         }
-        
-        
+
     }
-    public boolean addSupply(MedicineBatch medicineBatchToAdd)
-    {
+
+    public boolean addSupply(MedicineBatch medicineBatchToAdd) throws SQLException {
+        PreparedStatement psInsert = dbInit.conn.prepareStatement("insert into medstocks values (?, ?, ?, ?, ?)");
+        psInsert.setString(1, medicineBatchToAdd.getCodenumber());
+        psInsert.setLong(2, medicineBatchToAdd.getVendorid());
+        psInsert.setString(3, medicineBatchToAdd.getBatchNo());
+        psInsert.setTimestamp(4, medicineBatchToAdd.getExpiryDate());
+        psInsert.setLong(5, medicineBatchToAdd.getQuantity());
+        psInsert.executeUpdate();
         return true;
     }
-    public ArrayList<Medicine> getTobeordered()
-    {
+
+    public ArrayList<Medicine> getTobeordered() {
         return new ArrayList<Medicine>();
     }
 
@@ -190,5 +189,5 @@ public class Medicine {
     public String getCodenumber() {
         return codenumber;
     }
-    
+
 }

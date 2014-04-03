@@ -19,6 +19,14 @@ public class MedicineBatch {
     private Timestamp expiryDate;
     private long quantity;
 
+    public MedicineBatch(String codenumber, long vendorid, String batchNo, Timestamp expiryDate, long quantity) {
+        this.codenumber = codenumber;
+        this.vendorid = vendorid;
+        this.batchNo = batchNo;
+        this.expiryDate = expiryDate;
+        this.quantity = quantity;
+    }
+    
     public MedicineBatch(String batchno) throws SQLException {
         if (dbInit.conn == null)
         {

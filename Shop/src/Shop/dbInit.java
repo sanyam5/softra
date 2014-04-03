@@ -38,7 +38,7 @@ public class dbInit {
             rs1 = dbmd.getTables(null, "APP", "MEDICINES", null);
             if (!rs1.next())
             {
-                s.execute("create table medicines(codenumber varchar(100), tradename varchar(100), unitprice bigint, purchaseprice bigint)");
+                s.execute("create table medicines(codenumber varchar(100), tradename varchar(100), unitprice bigint, purchaseprice bigint, addDate timestamp)");
                 System.out.println("Created table medicines");
             } else
             {

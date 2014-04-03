@@ -43,11 +43,18 @@ public class Shop {
     public boolean addMedicine(Medicine inp) {
         try
         {
-            PreparedStatement psInsert = dbInit.conn.prepareStatement("insert into medicines values (?, ?, ?, ?)");
+            PreparedStatement ps = dbInit.conn.prepareStatement("SELECT * from medicines WHERE codenumber = '"+inp.getCodenumber()+"'");
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                throw new Exception("Medicine with that codenumber already exists!");
+            }
+            PreparedStatement psInsert = dbInit.conn.prepareStatement("insert into medicines values (?, ?, ?, ?, ?)");
             psInsert.setString(1, inp.getCodenumber());
             psInsert.setString(2, inp.getTradename());
             psInsert.setLong(3, inp.getUnitsellingprice());
             psInsert.setLong(4, inp.getPurchasingprice());
+            psInsert.setTimestamp(5, new Timestamp(new java.util.Date().getTime()));
             psInsert.executeUpdate();
             for(Vendor in:inp.getSupplyvendors())
             {
