@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
@@ -101,14 +102,16 @@ public class Medicine {
                     tosell = 0;
                 }
             }
-            //to-do sql 
+            
             if (dbInit.conn == null)
             {
                 dbInit.startDb();
             }
-            Statement stmt = dbInit.conn.createStatement();
-            String sqlupdate = "DELETE from shopowner";
-            stmt.executeUpdate(sqlupdate);
+            PreparedStatement psInsert = dbInit.conn.prepareStatement("insert into medsales values (?, ?, ?)");
+            psInsert.setString(1, codenumber);
+            psInsert.setLong(2, quantity);
+            psInsert.setTimestamp(3, new Timestamp(sellDate));
+            psInsert.executeUpdate();
         } 
         else 
         {
@@ -130,14 +133,26 @@ public class Medicine {
         return expired;
     }
     
-    public void removeExpired()
+    public void removeExpired() throws SQLException
     {
         ArrayList<MedicineBatch> expired = getExpiredbatches();
+        for(MedicineBatch exmb : expired)
+        {
+            batches.remove(exmb);
+            if (dbInit.conn == null)
+            {
+                dbInit.startDb();
+            }
+            Statement stmt = dbInit.conn.createStatement();
+            String sqlupdate = "DELETE from medstocks WHERE batchno = '"+exmb.getBatchNo()+"'";
+            stmt.executeUpdate(sqlupdate);
+        }
+        
         
     }
     public boolean addSupply(MedicineBatch medicineBatchToAdd)
     {
-        return true;//wrong code
+        return true;
     }
     public ArrayList<Medicine> getTobeordered()
     {
