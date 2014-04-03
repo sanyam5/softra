@@ -71,6 +71,15 @@ public class dbInit {
             {
                 System.out.println("Table medstocks Exists");
             }
+            rs1 = dbmd.getTables(null, "APP", "MEDSALES", null);
+            if (!rs1.next())
+            {
+                s.execute("create table medsales(codenumber varchar(100),quantity bigint, sellDate timestamp)");
+                System.out.println("Created table medsales");
+            } else
+            {
+                System.out.println("Table medsales Exists");
+            }
 
         } catch (Exception e)
         {
