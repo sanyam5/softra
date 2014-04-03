@@ -28,6 +28,7 @@ public class Medicine {
     private long purchasingprice;
     private long totalsold;
     private long totalstock;
+    private Timestamp addDate;
 
     public Medicine(String tradename,
             ArrayList<Vendor> supplyvendors, 
@@ -154,9 +155,27 @@ public class Medicine {
     {
         return true;
     }
-    public ArrayList<Medicine> getTobeordered()
+    public ArrayList<Medicine> getTobeordered() throws SQLException
     {
-        return new ArrayList<Medicine>();
+        ArrayList<Medicine> tobeordered =  new ArrayList<Medicine>();
+        if (dbInit.conn == null)
+        {
+            dbInit.startDb();
+        }
+        PreparedStatement pst = dbInit.conn.prepareStatement("SELECT * FROM medsales");
+        ResultSet rs = pst.executeQuery();
+        while(rs.next())
+        {            
+            String codenumber = rs.getString(1);
+            Medicine toAddCandy = new Medicine(codenumber);
+            long elapsedTime = (new Date()).getTime() - toAddCandy.addDate.getTime();
+            long elapsedWeeks = elapsedTime/(7*24*3600*1000);
+            if(elapsedWeeks==0) continue;
+            if(totalstock*elapsedWeeks <= totalsold)
+                tobeordered.add(toAddCandy);
+        }
+        return tobeordered;
+        
     }
 
     public String getTradename() {
