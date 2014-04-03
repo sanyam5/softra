@@ -19,6 +19,16 @@ public class Vendor {
     private String name;
 
     //sql code populates this class with id
+    public Vendor(String address, String name) throws SQLException
+    {
+        this.address = address;
+        this.name = name;
+        PreparedStatement psInsert = dbInit.conn.prepareStatement("insert into vendors values (?, ?)");
+        psInsert.setString(1,address);
+        psInsert.setString(2,name);
+        psInsert.executeUpdate();
+    }
+    
     public Vendor(long id) throws SQLException {
 
         this.id = id;

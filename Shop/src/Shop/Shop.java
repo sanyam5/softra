@@ -36,7 +36,7 @@ public class Shop {
             return true;
         } else
         {
-            return true;
+            return false;
         }
     }
 
@@ -49,6 +49,13 @@ public class Shop {
             psInsert.setLong(3, inp.getUnitsellingprice());
             psInsert.setLong(4, inp.getPurchasingprice());
             psInsert.executeUpdate();
+            for(Vendor in:inp.getSupplyvendors())
+            {
+                psInsert = dbInit.conn.prepareStatement("insert into medvendors values (?, ?)");
+                psInsert.setString(1, inp.getCodenumber());
+                psInsert.setLong(2,in.getId());
+                psInsert.executeUpdate();
+            }
             return true;
         }
         catch(Exception e)
