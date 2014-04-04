@@ -45,6 +45,7 @@ public class MainPage extends javax.swing.JFrame {
         }
         return ret;
     }
+    public boolean lock;
     public void doAddMedicine() throws SQLException
     {
         dbInit.refreshAll();
@@ -53,10 +54,12 @@ public class MainPage extends javax.swing.JFrame {
             am_vendor_list.addItem(v.getName() + "(" + v.getId() + ")");
         am_vendor_list.setSelectedIndex(1);
         System.out.println("hey !! " + am_vendor_list.getSelectedIndex());
+        lock = false;
         
     }
     public MainPage() {
         initComponents();
+        lock = true;
         try {
             //Add- Medicine
             doAddMedicine();
@@ -144,9 +147,19 @@ public class MainPage extends javax.swing.JFrame {
         jLabel3.setText("Choose Vendor");
 
         am_vendor_list.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        am_vendor_list.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                am_vendor_listMouseClicked(evt);
+            }
+        });
         am_vendor_list.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 am_vendor_listActionPerformed(evt);
+            }
+        });
+        am_vendor_list.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                am_vendor_listFocusGained(evt);
             }
         });
 
@@ -176,6 +189,17 @@ public class MainPage extends javax.swing.JFrame {
         am_name.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 am_nameActionPerformed(evt);
+            }
+        });
+        am_name.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                am_nameKeyTyped(evt);
+            }
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                am_nameKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                am_nameKeyReleased(evt);
             }
         });
 
@@ -543,14 +567,13 @@ public class MainPage extends javax.swing.JFrame {
 
     private void am_vendor_listActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_am_vendor_listActionPerformed
         // TODO add your handling code here:
-        System.out.println(evt.getID());
-        if(evt.getID()==1001) return;
+        if(lock) return;
+        System.out.println("am_vendor_list");
         DefaultTableModel dm = (DefaultTableModel) am_table.getModel();
         
         int rowCount=dm.getRowCount();
         for (int i = 0;i<rowCount;i++) {
-            dm.removeRow(i);
-            rowCount--;
+            dm.removeRow(0);
         }am_table.setModel(dm);
         
         ArrayList<Medicine> vsm ;
@@ -588,6 +611,31 @@ public class MainPage extends javax.swing.JFrame {
         }
        
     }//GEN-LAST:event_am_nameActionPerformed
+
+
+    private void am_vendor_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_am_vendor_listMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_am_vendor_listMouseClicked
+
+    private void am_vendor_listFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_am_vendor_listFocusGained
+        // TODO add your handling code here:
+        am_vendor_listMouseClicked(null);
+    }//GEN-LAST:event_am_vendor_listFocusGained
+
+    private void am_nameKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_am_nameKeyPressed
+        // TODO add your handling code here:
+        
+    }//GEN-LAST:event_am_nameKeyPressed
+
+    private void am_nameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_am_nameKeyTyped
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_am_nameKeyTyped
+
+    private void am_nameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_am_nameKeyReleased
+        // TODO add your handling code here:
+        am_nameActionPerformed(null);
+    }//GEN-LAST:event_am_nameKeyReleased
 
     private void lem_refresh_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lem_refresh_buttonActionPerformed
         // TODO add your handling code here:
