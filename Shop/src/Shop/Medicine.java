@@ -110,6 +110,7 @@ public class Medicine {
             Iterator<MedicineBatch> it = batches.iterator();
             while (tosell > 0)
             {
+                if(!it.hasNext()) throw new Exception("Inconstistensy");
                 MedicineBatch mb = it.next();
                 if(mb.getExpiryDate().getTime() <= (new Date()).getTime()) continue; //medicine already expired
                 if (mb.getQuantity() < tosell)
@@ -135,7 +136,7 @@ public class Medicine {
             psInsert.executeUpdate();
         } else
         {
-            throw new Exception("Bitch nothing to sell");
+            throw new Exception("nothing to sell");
         }
 
     }

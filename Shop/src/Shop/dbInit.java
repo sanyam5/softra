@@ -180,6 +180,16 @@ public class dbInit {
             System.out.println(rs.getString(1) + "|" + rs.getLong(2) + "|" + rs.getString(3) + "|" + dateFormat.format(rs.getTimestamp(4)) + "|" + rs.getLong(5));
         }
     }
+    public static void printMedSales() throws SQLException {
+        System.out.println("Printing medsales");
+        PreparedStatement psInsert = conn.prepareStatement("SELECT * from medsales");
+        ResultSet rs = psInsert.executeQuery();
+        while (rs.next())
+        {
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+            System.out.println(rs.getString(1) + "|" + rs.getLong(2) + "|" + dateFormat.format(rs.getTimestamp(3)));
+        }
+    }
 //    public static void addEntry(String s, int t) throws SQLException {
 //        PreparedStatement psInsert = conn.prepareStatement("insert into users values (?, ?)");
 //        psInsert.setString(1, s);
