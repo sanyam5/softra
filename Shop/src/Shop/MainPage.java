@@ -6,6 +6,12 @@
 
 package Shop;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author hawck
@@ -15,8 +21,42 @@ public class MainPage extends javax.swing.JFrame {
     /**
      * Creates new form MainPage
      */
+    public ArrayList<Medicine> vendorSpecificMedicines(Vendor v) throws SQLException
+    {
+        ArrayList<Medicine> ret = new ArrayList<Medicine>();
+        for(String s:v.getMedicinelist())
+        {
+            ret.add(new Medicine(s));
+        }
+        return ret;
+    }
+    public ArrayList<Medicine> filterMedicineByName(ArrayList<Medicine> listMedicines,String subname)
+    {
+        ArrayList<Medicine> ret = new ArrayList<Medicine>();
+        for(Medicine m : listMedicines)
+        {
+            if(m.getTradename().contains(subname))
+                ret.add(m);
+        }
+        return ret;
+    }
+    public void doAddMedicine() throws SQLException
+    {
+        dbInit.refreshAll();
+        am_vendor_list.removeAllItems();
+        for(Vendor v:Shop.allVendors)
+            am_vendor_list.addItem(v.getName() + "(" + v.getId() + ")");
+        am_vendor_list.setSelectedIndex(1);
+        
+    }
     public MainPage() {
         initComponents();
+        try {
+            //Add- Medicine
+            doAddMedicine();
+        } catch (SQLException ex) {
+            Logger.getLogger(MainPage.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -98,6 +138,11 @@ public class MainPage extends javax.swing.JFrame {
         jLabel3.setText("Choose Vendor");
 
         am_vendor_list.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        am_vendor_list.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                am_vendor_listActionPerformed(evt);
+            }
+        });
 
         am_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -121,6 +166,12 @@ public class MainPage extends javax.swing.JFrame {
         jScrollPane1.setViewportView(am_table);
 
         jLabel4.setText("Generic/Trade Name");
+
+        am_name.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                am_nameActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -475,6 +526,51 @@ public class MainPage extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void am_vendor_listActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_am_vendor_listActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel dm = (DefaultTableModel) am_table.getModel();
+        
+        int rowCount=dm.getRowCount();
+        for (int i = 0;i<rowCount;i++) {
+            dm.removeRow(i);
+            rowCount--;
+        }am_table.setModel(dm);
+        
+        ArrayList<Medicine> vsm ;
+        try {
+            vsm = vendorSpecificMedicines(Shop.allVendors.get( am_vendor_list.getSelectedIndex()) );
+            for(Medicine m : vsm)
+            {
+                dm.addRow(new Object[] {m.getCodenumber(), m.getTradename(), m.getTotalstock(), m.getPurchasingprice(), m.getUnitsellingprice()});
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MainPage.class.getName()).log(Level.SEVERE, null, ex);
+            
+        }
+    }//GEN-LAST:event_am_vendor_listActionPerformed
+
+    private void am_nameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_am_nameActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel dm = (DefaultTableModel) am_table.getModel();
+        int rowCount=dm.getRowCount();
+        for (int i = 0;i<rowCount;i++) {
+            dm.removeRow(i);
+        }
+        ArrayList<Medicine> vsm ;
+        try {
+            vsm = vendorSpecificMedicines(Shop.allVendors.get( am_vendor_list.getSelectedIndex()) );
+            ArrayList<Medicine> fvsm = filterMedicineByName(vsm,am_name.getText());
+            for(Medicine m : fvsm)
+            {
+                dm.addRow(new Object[] {m.getCodenumber(), m.getTradename(), m.getTotalstock(), m.getPurchasingprice(), m.getUnitsellingprice()});
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MainPage.class.getName()).log(Level.SEVERE, null, ex);
+            
+        }
+       
+    }//GEN-LAST:event_am_nameActionPerformed
 
     /**
      * @param args the command line arguments
