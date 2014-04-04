@@ -116,32 +116,31 @@ public class Shop {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws SQLException, ParseException, Exception {
-
+        dbInit.startDb();
         dbInit.refreshAll();
         dbInit.printMedicines();
         dbInit.printMedSales();
-        Medicine a = new Medicine("MED1");
-        System.out.println(a.getTotalstock());
-        new AccountsInfo();
+//        Medicine a = new Medicine("MED1");
+//        System.out.println(a.getTotalstock());
+//        new AccountsInfo();
 //        a.sell(2, new java.util.Date().getTime());
-//        new Timestamp
-//        new Login();
-//        Shop.Register(new ShopOwner("Arkanath", "pass", "B-121", "981821", "x@y.com", new Timestamp(new java.util.Date().getTime())));
-//        dbInit.startDb();
-//        ShopOwner a = new ShopOwner();
-//        System.out.println(a.getPhoneno());
-//        long id = new Vendor("Hzaari Baag", "phekubabu").getId();
-//        System.out.println(id);
-//        ArrayList<Vendor> ch = new ArrayList<Vendor>();
-//        ch.add(new Vendor(id));
-//        //Shop.addMedicine(new Medicine("Paracetamol", ch, 50, 40));
-//        dbInit.refreshMedicines();
-//        dbInit.printMedicines();
-//        long check = new java.util.Date().getTime();
-//        long oneweek = 1000*60*60*24*30;
-//        allMedicines.get(0).addSupply(new MedicineBatch("MED1", id, "PRCT102", Shop.ddmmYYYY2Timestamp(01, 05, 2014), 4));
-//        dbInit.printMedBatches();
-//        dbInit.printVendors();
+        
+        Shop.Register(new ShopOwner("Arkanath", "pass", "B-121", "981821", "x@y.com", new Timestamp(new java.util.Date().getTime())));
+        dbInit.startDb();
+        ShopOwner a = new ShopOwner();
+        System.out.println(a.getPhoneno());
+        long id = new Vendor("Hzaari Baag", "phekubabu").getId();
+        System.out.println(id);
+        ArrayList<Vendor> ch = new ArrayList<Vendor>();
+        ch.add(new Vendor(id));
+        //Shop.addMedicine(new Medicine("Paracetamol", ch, 50, 40));
+        dbInit.refreshMedicines();
+        dbInit.printMedicines();
+        long check = new java.util.Date().getTime();
+        long oneweek = 1000*60*60*24*30;
+        allMedicines.get(0).addSupply(new MedicineBatch("MED1", id, "PRCT102", Shop.ddmmYYYY2Timestamp(01, 05, 2014), 4));
+        dbInit.printMedBatches();
+        dbInit.printVendors();
     }
 
     public Shop() {
