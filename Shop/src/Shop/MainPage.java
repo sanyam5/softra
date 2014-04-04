@@ -10,6 +10,9 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
@@ -330,7 +333,7 @@ public class MainPage extends javax.swing.JFrame {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "VendorID", "CodeNumber", "BatchNo", "Name", "Exp. Date", "Quantity"
+                "Vendor", "CodeNumber", "BatchNo", "Name", "Exp. Date", "Quantity"
             }
         ) {
             Class[] types = new Class [] {
@@ -343,7 +346,12 @@ public class MainPage extends javax.swing.JFrame {
         });
         jScrollPane3.setViewportView(lem_table);
 
-        lem_togglebutton.setText("Show Vendor Wise / Medicine Wise");
+        lem_togglebutton.setText("Sort by Vendor Name");
+        lem_togglebutton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lem_togglebuttonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -598,7 +606,7 @@ public class MainPage extends javax.swing.JFrame {
             {
                 try
                 {
-                    dm.addRow(new Object[] {m.getVendorid(), m.getCodenumber(), m.getBatchNo(), new Medicine(m.getCodenumber()).getTradename(),dateFormat.format(m.getExpiryDate()), String.valueOf(m.getQuantity())});
+                    dm.addRow(new Object[] {new Vendor(m.getVendorid()).getName(), m.getCodenumber(), m.getBatchNo(), new Medicine(m.getCodenumber()).getTradename(),dateFormat.format(m.getExpiryDate()), String.valueOf(m.getQuantity())});
                 } catch (SQLException ex)
                 {
                     Logger.getLogger(MainPage.class.getName()).log(Level.SEVERE, null, ex);
@@ -607,6 +615,68 @@ public class MainPage extends javax.swing.JFrame {
         }
        
     }//GEN-LAST:event_lem_refresh_buttonActionPerformed
+
+    public static Comparator<MedicineBatch> VendorNameComparator = new Comparator<MedicineBatch>(){
+
+    public int compare(MedicineBatch o1, MedicineBatch o2) {
+        MedicineBatch p1 = (MedicineBatch) o1;
+        MedicineBatch p2 = (MedicineBatch) o2;
+        try
+        {
+            return new Vendor(p1.getVendorid()).getName().compareTo(new Vendor(p2.getVendorid()).getName());
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(MainPage.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        }
+    }
+    };
+    public static Comparator<MedicineBatch> MedicineNameComparator = new Comparator<MedicineBatch>(){
+
+    public int compare(MedicineBatch o1, MedicineBatch o2) {
+        MedicineBatch p1 = (MedicineBatch) o1;
+        MedicineBatch p2 = (MedicineBatch) o2;
+        try
+        {
+            return new Medicine(p1.getCodenumber()).getTradename().compareTo(new Medicine(p1.getCodenumber()).getTradename());
+        } catch (SQLException ex)
+        {
+            Logger.getLogger(MainPage.class.getName()).log(Level.SEVERE, null, ex);
+            return 0;
+        }
+    }
+    };
+
+    private void lem_togglebuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lem_togglebuttonActionPerformed
+        // TODO add your handling code here:
+        if(lem_togglebutton.isSelected()) lem_togglebutton.setText("Sort by Medicine Name");
+        else lem_togglebutton.setText("Sort by Vendor Name");
+        DefaultTableModel dm = (DefaultTableModel) lem_table.getModel();
+        int rowCount=dm.getRowCount();
+        for (int i = 0;i<rowCount;i++) {
+            dm.removeRow(0);
+            
+        }
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        ArrayList<MedicineBatch> vsm ;
+        
+        for(Medicine mm : Shop.allMedicines)
+        {
+            vsm = mm.getExpiredbatches();
+            if(lem_togglebutton.isSelected()) Collections.sort(vsm,VendorNameComparator);
+            else Collections.sort(vsm,MedicineNameComparator);
+            for(MedicineBatch m : vsm)
+            {
+                try
+                {
+                    dm.addRow(new Object[] {new Vendor(m.getVendorid()).getName(), m.getCodenumber(), m.getBatchNo(), new Medicine(m.getCodenumber()).getTradename(),dateFormat.format(m.getExpiryDate()), String.valueOf(m.getQuantity())});
+                } catch (SQLException ex)
+                {
+                    Logger.getLogger(MainPage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+    }//GEN-LAST:event_lem_togglebuttonActionPerformed
 
     /**
      * @param args the command line arguments

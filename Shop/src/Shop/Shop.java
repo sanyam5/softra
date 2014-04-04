@@ -123,6 +123,10 @@ public class Shop {
         Medicine a = new Medicine("MED1");
         System.out.println(a.getTotalstock());
         new AccountsInfo();
+        dbInit.printVendors();
+        
+        long id1 = new Vendor("zzaari Baag", "ahekubabu").getId();
+        long id2 = new Vendor("azaari Baag", "zhekubabu").getId();
 //        a.sell(2, new java.util.Date().getTime());
 //        new Timestamp
 //        new Login();
@@ -142,6 +146,9 @@ public class Shop {
 //        allMedicines.get(0).addSupply(new MedicineBatch("MED1", id, "PRCT102", Shop.ddmmYYYY2Timestamp(01, 05, 2014), 4));
 //        dbInit.printMedBatches();
 //        dbInit.printVendors();
+//        allMedicines.get(0).addSupply(new MedicineBatch("MED1", id1, "PRCT103", Shop.ddmmYYYY2Timestamp(01, 02, 2014), 4));
+//        allMedicines.get(0).addSupply(new MedicineBatch("MED1", id2, "PRCT104", Shop.ddmmYYYY2Timestamp(01, 02, 2014), 4));
+        
     }
 
     public Shop() {
