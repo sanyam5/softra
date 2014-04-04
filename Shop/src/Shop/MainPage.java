@@ -7,6 +7,8 @@
 package Shop;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -130,11 +132,11 @@ public class MainPage extends javax.swing.JFrame {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 662, Short.MAX_VALUE)
+            .addGap(0, 711, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 375, Short.MAX_VALUE)
+            .addGap(0, 563, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab("Home", jPanel1);
@@ -214,7 +216,7 @@ public class MainPage extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(am_vendor_list, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(am_name, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(43, Short.MAX_VALUE))
+                .addContainerGap(92, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -297,7 +299,7 @@ public class MainPage extends javax.swing.JFrame {
                                 .addComponent(jLabel12)
                                 .addGap(27, 27, 27)
                                 .addComponent(as_addvendor_button)))))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -338,6 +340,11 @@ public class MainPage extends javax.swing.JFrame {
         jLabel6.setText("List Expired Medicines");
 
         lem_refresh_button.setText("Refresh");
+        lem_refresh_button.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lem_refresh_buttonActionPerformed(evt);
+            }
+        });
 
         lem_table.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -374,7 +381,7 @@ public class MainPage extends javax.swing.JFrame {
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lem_refresh_button)))
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(99, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lem_togglebutton)
@@ -516,7 +523,7 @@ public class MainPage extends javax.swing.JFrame {
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(tbo_refresh)))
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addContainerGap(101, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -537,15 +544,14 @@ public class MainPage extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 670, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 732, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 413, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
@@ -582,6 +588,7 @@ public class MainPage extends javax.swing.JFrame {
         for (int i = 0;i<rowCount;i++) {
             dm.removeRow(i);
         }
+        
         ArrayList<Medicine> vsm ;
         try {
             vsm = vendorSpecificMedicines(Shop.allVendors.get( am_vendor_list.getSelectedIndex()) );
@@ -596,6 +603,7 @@ public class MainPage extends javax.swing.JFrame {
         }
        
     }//GEN-LAST:event_am_nameActionPerformed
+
 
     private void am_vendor_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_am_vendor_listMouseClicked
         // TODO add your handling code here:
@@ -620,6 +628,34 @@ public class MainPage extends javax.swing.JFrame {
         // TODO add your handling code here:
         am_nameActionPerformed(null);
     }//GEN-LAST:event_am_nameKeyReleased
+
+    private void lem_refresh_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lem_refresh_buttonActionPerformed
+        // TODO add your handling code here:
+        DefaultTableModel dm = (DefaultTableModel) lem_table.getModel();
+        int rowCount=dm.getRowCount();
+        for (int i = 0;i<rowCount;i++) {
+            dm.removeRow(0);
+            
+        }
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        ArrayList<MedicineBatch> vsm ;
+        for(Medicine mm : Shop.allMedicines)
+        {
+            vsm = mm.getExpiredbatches();
+            for(MedicineBatch m : vsm)
+            {
+                try
+                {
+                    dm.addRow(new Object[] {m.getVendorid(), m.getCodenumber(), m.getBatchNo(), new Medicine(m.getCodenumber()).getTradename(),dateFormat.format(m.getExpiryDate()), String.valueOf(m.getQuantity())});
+                } catch (SQLException ex)
+                {
+                    Logger.getLogger(MainPage.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+       
+    }//GEN-LAST:event_lem_refresh_buttonActionPerformed
+
 
     /**
      * @param args the command line arguments
