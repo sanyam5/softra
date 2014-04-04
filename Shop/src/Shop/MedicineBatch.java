@@ -19,7 +19,13 @@ public class MedicineBatch {
     private Timestamp expiryDate;
     private long quantity;
 
-    public MedicineBatch(String codenumber, long vendorid, String batchNo, Timestamp expiryDate, long quantity) {
+    public MedicineBatch(String codenumber, long vendorid, String batchNo, Timestamp expiryDate, long quantity) throws SQLException, Exception {
+        PreparedStatement pst = dbInit.conn.prepareStatement("SELECT * FROM medstocks WHERE batchno = '"+batchNo+"'");
+        ResultSet rs = pst.executeQuery();
+        while(rs.next())
+        {
+            throw new Exception("Batch Already exists");
+        }
         this.codenumber = codenumber;
         this.vendorid = vendorid;
         this.batchNo = batchNo;

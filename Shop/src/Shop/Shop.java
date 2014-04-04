@@ -5,8 +5,11 @@
  */
 package Shop;
 
+import static Shop.dbInit.conn;
 import java.sql.*;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.swing.JOptionPane;
 
@@ -77,17 +80,52 @@ public class Shop {
         }
     }
 
-    public void showProfit(Timestamp date1, Timestamp date2) {
-
+    public static AbstractMap.SimpleEntry<Long, Long> showProfit(Timestamp date1, Timestamp date2) throws SQLException {
+        Long profit = new Long(0);
+        Long revenue = new Long(0);
+        
+        PreparedStatement psInsert = conn.prepareStatement("SELECT * from medsales");
+        ResultSet rs = psInsert.executeQuery();
+        while (rs.next())
+        {
+            long a = rs.getTimestamp(3).getTime();
+            if(a>=date1.getTime() && a<=date2.getTime())
+            {
+                Medicine med = new Medicine(rs.getString(1));
+                profit += new Long(med.getUnitsellingprice()-med.getPurchasingprice());
+                revenue += new Long(med.getUnitsellingprice());
+            }
+        }
+        return new AbstractMap.SimpleEntry<Long, Long>(revenue,profit);
+    }
+    
+    public static Timestamp ddmmYYYY2Timestamp(int dd, int mm, int YYYY) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date date = dateFormat.parse(dd + "/" + mm + "/" + YYYY);
+        long time = date.getTime();
+        return new Timestamp(time);
+    }
+    public static Timestamp ddmmYYYY2Timestamp(String dd, String mm, String YYYY) throws ParseException {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+        java.util.Date date = dateFormat.parse(dd + "/" + mm + "/" + YYYY);
+        long time = date.getTime();
+        return new Timestamp(time);
     }
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws SQLException, ParseException {
+    public static void main(String[] args) throws SQLException, ParseException, Exception {
 
         dbInit.refreshAll();
-        new Login();
+        dbInit.printMedicines();
+        dbInit.printMedSales();
+        Medicine a = new Medicine("MED1");
+        System.out.println(a.getTotalstock());
+        new AccountsInfo();
+//        a.sell(2, new java.util.Date().getTime());
+//        new Timestamp
+//        new Login();
 //        Shop.Register(new ShopOwner("Arkanath", "pass", "B-121", "981821", "x@y.com", new Timestamp(new java.util.Date().getTime())));
 //        dbInit.startDb();
 //        ShopOwner a = new ShopOwner();
@@ -99,9 +137,14 @@ public class Shop {
 //        //Shop.addMedicine(new Medicine("Paracetamol", ch, 50, 40));
 //        dbInit.refreshMedicines();
 //        dbInit.printMedicines();
-//        allMedicines.get(0).addSupply(new MedicineBatch("MED1", id, "PRCT101", new Timestamp(new java.util.Date().getTime()+1000*60*60*24*7*4), 4));
+//        long check = new java.util.Date().getTime();
+//        long oneweek = 1000*60*60*24*30;
+//        allMedicines.get(0).addSupply(new MedicineBatch("MED1", id, "PRCT102", Shop.ddmmYYYY2Timestamp(01, 05, 2014), 4));
 //        dbInit.printMedBatches();
 //        dbInit.printVendors();
+    }
+
+    public Shop() {
     }
 
 }

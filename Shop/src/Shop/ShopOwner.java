@@ -23,12 +23,7 @@ public class ShopOwner {
     private static String emailid;
     private static Timestamp regDate;
 
-    public static Timestamp ddmmYYYY2Timestamp(int dd, int mm, int YYYY) throws ParseException {
-        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-        java.util.Date date = dateFormat.parse(dd + "/" + mm + "/" + YYYY);
-        long time = date.getTime();
-        return new Timestamp(time);
-    }
+    
 
     public ShopOwner() throws SQLException {
         if (dbInit.conn == null)
