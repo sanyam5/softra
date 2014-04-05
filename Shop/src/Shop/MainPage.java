@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -51,39 +50,31 @@ public class MainPage extends javax.swing.JFrame {
     {
         dbInit.refreshAll();
         am_vendor_list.removeAllItems();
+        am_vendor_list.addItem("All Vendors");
         for(Vendor v:Shop.allVendors)
             am_vendor_list.addItem(v.getName() + "(" + v.getId() + ")");
         am_vendor_list.setSelectedIndex(0);
-        System.out.println("hey !! " + am_vendor_list.getSelectedIndex());
         lock = false;
+        am_vendor_listActionPerformed(null);
         
     }
-    public void refreshAs_VendorList()
+    public boolean sm_lock;
+    public void doSellMedicine() throws SQLException
     {
-        as_vendor_list.removeAllItems();
-        for(Vendor v:Shop.allVendors)
-            as_vendor_list.addItem(v.getName() + "(" + v.getId() + ")");
-        am_vendor_list.setSelectedIndex(0);
-//        System.out.println("hey !! " + am_vendor_list.getSelectedIndex());
-//        lock = false;
-    }
-    public void refreshAs_MedicineList()
-    {
-        as_medicine_list.removeAllItems();
-        for(Medicine v:Shop.allMedicines)
-            as_medicine_list.addItem(v.getTradename() + "(" + v.getCodenumber()+ ")");
-        as_medicine_list.setSelectedIndex(0);
-//        System.out.println("hey !! " + am_vendor_list.getSelectedIndex());
-//        lock = false;
+        dbInit.refreshAll();
+        sm_medicine.removeAllItems();
+        for(Medicine m:Shop.allMedicines)
+            sm_medicine.addItem(m.getTradename()+" "+m.getTotalstock()+" " + "(" + m.getCodenumber() + ")");
+        sm_medicine.setSelectedIndex(0);
+        sm_lock = false;
     }
     public MainPage() {
         initComponents();
-        lock = true;
+        sm_lock = lock = true;
         try {
             //Add- Medicine
             doAddMedicine();
-            refreshAs_VendorList();
-            refreshAs_MedicineList();
+            doSellMedicine();
         } catch (SQLException ex) {
             Logger.getLogger(MainPage.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -101,7 +92,6 @@ public class MainPage extends javax.swing.JFrame {
         jPopupMenu1 = new javax.swing.JPopupMenu();
         jPopupMenu2 = new javax.swing.JPopupMenu();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         am_vendor_list = new javax.swing.JComboBox();
@@ -126,8 +116,6 @@ public class MainPage extends javax.swing.JFrame {
         as_exp_mm = new javax.swing.JTextField();
         as_exp_yy = new javax.swing.JTextField();
         as_addsupply_button = new javax.swing.JButton();
-        jLabel17 = new javax.swing.JLabel();
-        jLabel18 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         lem_refresh_button = new javax.swing.JButton();
@@ -151,21 +139,9 @@ public class MainPage extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tbo_table = new javax.swing.JTable();
         tbo_refresh = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 711, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 563, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab("Home", jPanel1);
 
         jLabel3.setText("Choose Vendor");
 
@@ -242,7 +218,7 @@ public class MainPage extends javax.swing.JFrame {
                         .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(am_vendor_list, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(am_name, javax.swing.GroupLayout.PREFERRED_SIZE, 391, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -267,11 +243,6 @@ public class MainPage extends javax.swing.JFrame {
         jLabel11.setText("1. Vendor Id");
 
         as_vendor_list.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        as_vendor_list.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                as_vendor_listActionPerformed(evt);
-            }
-        });
 
         jLabel12.setText("or");
 
@@ -291,19 +262,9 @@ public class MainPage extends javax.swing.JFrame {
 
         as_exp_mm.setText("mm");
 
-        as_exp_yy.setColumns(5);
-        as_exp_yy.setText("yyyy");
+        as_exp_yy.setText("yy");
 
         as_addsupply_button.setText("Add Supply and Print Cheque");
-        as_addsupply_button.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                as_addsupply_buttonActionPerformed(evt);
-            }
-        });
-
-        jLabel17.setText("-");
-
-        jLabel18.setText("-");
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -326,15 +287,11 @@ public class MainPage extends javax.swing.JFrame {
                                 .addComponent(as_batchno, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE)
                                 .addComponent(as_quantity, javax.swing.GroupLayout.Alignment.LEADING))
                             .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(as_exp_dd, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel17)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(as_exp_mm, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel18)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(as_exp_yy, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(as_exp_dd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(as_exp_mm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(as_exp_yy, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(as_addsupply_button, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)
@@ -344,7 +301,7 @@ public class MainPage extends javax.swing.JFrame {
                                 .addComponent(jLabel12)
                                 .addGap(27, 27, 27)
                                 .addComponent(as_addvendor_button)))))
-                .addContainerGap(70, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -374,12 +331,10 @@ public class MainPage extends javax.swing.JFrame {
                     .addComponent(jLabel16)
                     .addComponent(as_exp_dd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(as_exp_mm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(as_exp_yy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel17)
-                    .addComponent(jLabel18))
+                    .addComponent(as_exp_yy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(36, 36, 36)
                 .addComponent(as_addsupply_button)
-                .addContainerGap(189, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Add Supply", jPanel5);
@@ -433,7 +388,7 @@ public class MainPage extends javax.swing.JFrame {
                         .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 462, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lem_refresh_button)))
-                .addContainerGap(99, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lem_togglebutton)
@@ -456,6 +411,11 @@ public class MainPage extends javax.swing.JFrame {
         jTabbedPane1.addTab("List Expired Medicines", jPanel6);
 
         sm_medicine.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        sm_medicine.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sm_medicineActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Choose Medicine");
 
@@ -575,7 +535,7 @@ public class MainPage extends javax.swing.JFrame {
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 457, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(tbo_refresh)))
-                .addContainerGap(101, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -591,19 +551,32 @@ public class MainPage extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("To-be-ordered", jPanel3);
 
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 594, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 459, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Home", jPanel1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 732, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 602, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 15, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 609, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 9, Short.MAX_VALUE))
         );
 
         pack();
@@ -622,7 +595,10 @@ public class MainPage extends javax.swing.JFrame {
         
         ArrayList<Medicine> vsm ;
         try {
-            vsm = vendorSpecificMedicines(Shop.allVendors.get( am_vendor_list.getSelectedIndex()) );
+            if(am_vendor_list.getSelectedIndex() == 0 )
+                vsm = Shop.allMedicines;
+            else
+                vsm = vendorSpecificMedicines(Shop.allVendors.get( am_vendor_list.getSelectedIndex() - 1) );
             for(Medicine m : vsm)
             {
                 dm.addRow(new Object[] {m.getCodenumber(), m.getTradename(), m.getTotalstock(), m.getPurchasingprice(), m.getUnitsellingprice()});
@@ -708,6 +684,21 @@ public class MainPage extends javax.swing.JFrame {
        
     }//GEN-LAST:event_lem_refresh_buttonActionPerformed
 
+
+    private void sm_medicineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sm_medicineActionPerformed
+        // TODO add your handling code here:
+        if(sm_lock) return;
+        System.out.println("sm_medicine");
+        
+        Medicine m = Shop.allMedicines.get(sm_medicine.getSelectedIndex());
+        sm_codenumber.setText(m.getCodenumber());
+        sm_instock.setText(""+m.getTotalstock());
+        sm_sellprice.setText(""+m.getUnitsellingprice());
+        
+        
+    }//GEN-LAST:event_sm_medicineActionPerformed
+
+
     public static Comparator<MedicineBatch> VendorNameComparator = new Comparator<MedicineBatch>(){
 
     public int compare(MedicineBatch o1, MedicineBatch o2) {
@@ -770,26 +761,6 @@ public class MainPage extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_lem_togglebuttonActionPerformed
 
-    private void as_vendor_listActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_as_vendor_listActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_as_vendor_listActionPerformed
-
-    private void as_addsupply_buttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_as_addsupply_buttonActionPerformed
-        // TODO add your handling code here:
-        try{
-            long vend = Long.parseLong(as_vendor_list.getSelectedItem().toString().split("\\(")[1].split("\\)")[0]);
-            String coden = as_medicine_list.getSelectedItem().toString().split("\\(")[1].split("\\)")[0];
-            new Medicine(coden).addSupply(new MedicineBatch(coden, vend, as_batchno.getText(), Shop.ddmmYYYY2Timestamp(as_exp_dd.getText(), as_exp_mm.getText(), as_exp_yy.getText()), Long.parseLong(as_quantity.getText())));
-            
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-//            if(e.getMessage().equals(""))
-            JOptionPane.showMessageDialog(null, "Some Error, Fill Correctly!");
-        }
-        
-    }//GEN-LAST:event_as_addsupply_buttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -847,8 +818,6 @@ public class MainPage extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
-    private javax.swing.JLabel jLabel17;
-    private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
