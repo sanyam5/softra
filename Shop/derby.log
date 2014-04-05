@@ -1,11 +1,11 @@
 ----------------------------------------------------------------
-Sat Apr 05 14:39:32 IST 2014:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.1.1 - (1458268): instance a816c00e-0145-3126-6902-00000654a858 
-on database directory /Users/arkanathpathak/Temp/KgpCourseRelated/Software Engineering/Assignment With Sanyam/AssignmentSE/softra/Shop/dbname with class loader sun.misc.Launcher$AppClassLoader@591ce4fe 
-Loaded from file:/Users/arkanathpathak/Temp/KgpCourseRelated/Software%20Engineering/Assignment%20With%20Sanyam/AssignmentSE/softra/Shop/src/derby.jar
+Sat Apr 05 14:48:55 IST 2014:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.10.1.1 - (1458268): instance a816c00e-0145-312f-0233-000006562cc8 
+on database directory /Users/arkanathpathak/Temp/KgpCourseRelated/Software Engineering/Assignment With Sanyam/softra/Shop/dbname with class loader sun.misc.Launcher$AppClassLoader@591ce4fe 
+Loaded from file:/Users/arkanathpathak/Temp/KgpCourseRelated/Software%20Engineering/Assignment%20With%20Sanyam/softra/Shop/src/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.7.0_45-b18
-user.dir=/Users/arkanathpathak/Temp/KgpCourseRelated/Software Engineering/Assignment With Sanyam/AssignmentSE/softra/Shop
+user.dir=/Users/arkanathpathak/Temp/KgpCourseRelated/Software Engineering/Assignment With Sanyam/softra/Shop
 os.name=Mac OS X
 os.arch=x86_64
 os.version=10.9.2
