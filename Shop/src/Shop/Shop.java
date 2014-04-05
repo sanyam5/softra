@@ -116,7 +116,7 @@ public class Shop {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws SQLException, ParseException, Exception {
-
+        dbInit.startDb();
         dbInit.refreshAll();
         dbInit.printMedicines();
         dbInit.printMedSales();
@@ -130,6 +130,12 @@ public class Shop {
 //        a.sell(2, new java.util.Date().getTime());
 //        new Timestamp
 //        new Login();
+
+////        Medicine a = new Medicine("MED1");
+////        System.out.println(a.getTotalstock());
+////        new AccountsInfo();
+////        a.sell(2, new java.util.Date().getTime());
+
 //        Shop.Register(new ShopOwner("Arkanath", "pass", "B-121", "981821", "x@y.com", new Timestamp(new java.util.Date().getTime())));
 //        dbInit.startDb();
 //        ShopOwner a = new ShopOwner();
